@@ -13,20 +13,18 @@ class TestViews(TestCase):
             username="testuser",
             password="12345"
         )
+        self.client.force_login(self.user)
 
     def test_index_view(self):
-        self.client.force_login(self.user)
         response = self.client.get(reverse("taxi:index"))
         self.assertEqual(response.status_code, 200)
 
     def test_manufacturer_list_view(self):
-        self.client.force_login(self.user)
         response = self.client.get(reverse("taxi:manufacturer-list"))
         self.assertEqual(response.status_code, 200)
 
     def test_toggle_assign_to_car(self):
-        self.client.force_login(self.user)
-        car_id = 1  # Replace with a valid car ID
+        car_id = 1
         response = self.client.get(
             reverse("taxi:car-detail", kwargs={"pk": car_id})
         )

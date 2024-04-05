@@ -5,8 +5,13 @@ from django.urls import reverse_lazy
 from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from .models import Driver, Car, Manufacturer
-from .forms import DriverCreationForm, DriverLicenseUpdateForm, CarForm, SearchForm
+from taxi.models import Driver, Car, Manufacturer
+from taxi.forms import (
+    DriverCreationForm,
+    DriverLicenseUpdateForm,
+    CarForm,
+    SearchForm
+)
 
 
 @login_required
@@ -38,9 +43,7 @@ class ManufacturerListView(LoginRequiredMixin, generic.ListView):
     def get_context_data(self, **kwargs):
         context = super(ManufacturerListView, self).get_context_data(**kwargs)
         name = self.request.GET.get("search", "")
-        context["search_form"] = SearchForm(
-            initial={"search": name}
-        )
+        context["search_form"] = SearchForm(initial={"search": name})
         return context
 
     def get_queryset(self):
@@ -75,9 +78,7 @@ class CarListView(LoginRequiredMixin, generic.ListView):
     def get_context_data(self, **kwargs):
         context = super(CarListView, self).get_context_data(**kwargs)
         name = self.request.GET.get("search", "")
-        context["search_form"] = SearchForm(
-            initial={"search": name}
-        )
+        context["search_form"] = SearchForm(initial={"search": name})
         return context
 
     def get_queryset(self):
@@ -116,9 +117,7 @@ class DriverListView(LoginRequiredMixin, generic.ListView):
     def get_context_data(self, **kwargs):
         context = super(DriverListView, self).get_context_data(**kwargs)
         username = self.request.GET.get("search", "")
-        context["search_form"] = SearchForm(
-            initial={"search": username}
-        )
+        context["search_form"] = SearchForm(initial={"search": username})
         return context
 
     def get_queryset(self):

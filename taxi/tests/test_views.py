@@ -2,8 +2,11 @@ from django.test import TestCase
 from django.contrib.auth import get_user_model
 from django.test import Client
 from django.urls import reverse
+from django.core.exceptions import ValidationError
+
 
 from taxi.models import Driver, Car, Manufacturer
+from taxi.forms import validate_license_number
 
 
 class TestViews(TestCase):
@@ -66,3 +69,30 @@ class ManufacturerListViewTestCase(TestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Toyota")
+
+
+class LicenseNumberValidationTestCase(TestCase):
+    def test_valid_license_number(self):
+        valid_license_number = "ABC12345"
+        result = validate_license_number(valid_license_number)
+        self.assertEqual(result, valid_license_number)
+
+    def test_invalid_length(self):
+        invalid_license_number = "ABC1234"
+        with self.assertRaises(ValidationError):
+            validate_license_number(invalid_license_number)
+
+    def test_invalid_first_three_chars(self):
+        invalid_license_number = "123AB567"
+        with self.assertRaises(ValidationError):
+            validate_license_number(invalid_license_number)
+
+    def test_invalid_last_five_chars(self):
+        invalid_license_number = "ABCDEF12"
+        with self.assertRaises(ValidationError):
+            validate_license_number(invalid_license_number)
+
+    def test_invalid_first_three_chars_not_uppercase(self):
+        invalid_license_number = "abc12345"
+        with self.assertRaises(ValidationError):
+            validate_license_number(invalid_license_number)
